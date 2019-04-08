@@ -48,7 +48,7 @@ class Garden(object):
                       str(measurements[i].measurementValue))
             print("---")
 
-        pass
+
 
 
 class Bed(object):
