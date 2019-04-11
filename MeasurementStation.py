@@ -2,6 +2,7 @@ import time
 import board
 import busio
 import adafruit_bme280
+import psycopg2
 # import RPi.GPIO as GPIO
 
 
@@ -48,7 +49,15 @@ class Garden(object):
                       str(measurements[i].measurementValue))
             print("---")
 
-
+        conn = psycopg2.connect('host=192.168.1.31 user=pi password=PzFhr2017 dbname=plantguardian_test')
+        cursor = conn.cursor()
+        query = "INSERT INTO measurements VALUES (%s, %s, %s)"
+        for measurement in measurements:
+            values = (measurement.measurementTime, measurement.measurementType, measurement.measurementValue)
+            cursor.execute(query, values)
+            conn.commit()
+        conn.close()
+        cursor.close()
 
 
 class Bed(object):
@@ -109,7 +118,7 @@ class BME_280_Sensor(Sensor):
 
 # test
 
-myGarden = Garden("addr", "pw", "name", 5)
+myGarden = Garden("addr", "pw", "name", 60)
 myBed = Bed("firstBed")
 myBed.addSensor(BME_280_Sensor(["temperature", "humidity", "pressure", "dewPoint"], ""))
 myGarden.addBed(myBed)
@@ -122,4 +131,4 @@ for o in range(0, len(myMeasurements)):
           str(myMeasurements[o].measurementValue))
 
 print("---")"""
-myGarden.continuousMeasurement(5)
+myGarden.continuousMeasurement(60)
