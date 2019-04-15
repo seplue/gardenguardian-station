@@ -41,7 +41,6 @@ class Garden(object):
 
     @staticmethod
     def sendMeasurements(measurements):
-        # todo replace print with real send method
         if True:
             for i in range(0, len(measurements)):
                 print(str(measurements[i].measurementTime) + ": " +
