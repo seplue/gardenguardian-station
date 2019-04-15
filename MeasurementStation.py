@@ -4,6 +4,8 @@ import busio
 import adafruit_bme280
 import psycopg2
 # import RPi.GPIO as GPIO
+# todo send more information with sendMeasurements(): bedName, gardenName
+# todo change humidity to airhumidity and add earthhumidity
 
 
 class SensorMeasurement(object):
