@@ -17,8 +17,9 @@ class SensorMeasurement(object):
 
 
 class Garden(object):
-    def __init__(self, databaseAddress, databasePassword, gardenName, measurementFrequency):
+    def __init__(self, databaseAddress, databaseUser, databasePassword, gardenName, measurementFrequency):
         self.databaseAddress = databaseAddress
+        self.databaseUser = databaseUser
         self.databasePassword = databasePassword
         self.gardenName = gardenName
         self.measurementFrequency = measurementFrequency
@@ -49,12 +50,14 @@ class Garden(object):
                       measurements[i].measurementType + ": " +
                       str(measurements[i].measurementValue))
             print("---")
-
+        # todo change values in .connect() to variables from function init
         conn = psycopg2.connect('host=192.168.1.31 user=pi password=PzFhr2017 dbname=plantguardian_test')
         cursor = conn.cursor()
-        query = "INSERT INTO measurements VALUES (%s, %s, %s)"
+        query = "INSERT INTO measurements(measurementtime, measurementtype, measurementvalue, bedname, gardenname) " \
+                "VALUES (%s, %s, %s, %s, %s)"
         for measurement in measurements:
-            values = (measurement.measurementTime, measurement.measurementType, measurement.measurementValue)
+            values = (measurement.measurementTime, measurement.measurementType, measurement.measurementValue,
+                      "mybedname", "mygardenname")
             cursor.execute(query, values)
             conn.commit()
         conn.close()
@@ -119,7 +122,7 @@ class BME_280_Sensor(Sensor):
 
 # test
 
-myGarden = Garden("addr", "pw", "name", 60)
+myGarden = Garden("addr", "pi", "pw", "name", 60)
 myBed = Bed("firstBed")
 myBed.addSensor(BME_280_Sensor(["temperature", "humidity", "pressure", "dewPoint"], ""))
 myGarden.addBed(myBed)
