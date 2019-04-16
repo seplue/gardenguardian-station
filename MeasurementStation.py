@@ -35,10 +35,10 @@ class Garden(object):
 
     def collectMeasurements(self):
         gardenMeasurementList = []  # is list of type SensorMeasurement
-        for x in range(0, len(self.bedList)):
-            bedMeasurementList = (self.bedList[x].collectMeasurements())
-            for y in range(0, len(bedMeasurementList)):
-                gardenMeasurementList.append(bedMeasurementList[y])
+        for x in range(0, len(self.bedList)):  # for every bed
+            bedMeasurementList = (self.bedList[x].collectMeasurements())  # collect all measurements
+            for y in range(0, len(bedMeasurementList)):  # for every measurement
+                gardenMeasurementList.append(bedMeasurementList[y])  # add measurement to list
 
         return gardenMeasurementList
 
@@ -73,10 +73,11 @@ class Bed(object):
         self.sensorList.append(sensor)
 
     def collectMeasurements(self):
-        bedMeasurementList = []  # is list of SensorMeasurement
-        for x in range(0, len(self.sensorList)):    # for all sensors
-            for y in range(0, len(self.sensorList[x].measurementTypeList)):     # for all measurementTypes
+        bedMeasurementList = []  # is list of type SensorMeasurement
+        for x in range(0, len(self.sensorList)):  # for every sensor
+            for y in range(0, len(self.sensorList[x].measurementTypeList)):  # for every measurementType
                 bedMeasurementList.append(self.sensorList[x].measure(self.sensorList[x].measurementTypeList[y]))
+                # measure sensor and add measurement to list
 
         return bedMeasurementList
 
