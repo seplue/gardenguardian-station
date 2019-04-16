@@ -14,6 +14,8 @@ class SensorMeasurement(object):
         self.measurementType = measurementType
         self.measurementValue = measurementValue
         self.measurementTime = measurementTime
+        self.bedName = ""
+        self.gardenName = ""
 
 
 class Garden(object):
@@ -38,6 +40,7 @@ class Garden(object):
         for x in range(0, len(self.bedList)):  # for every bed
             bedMeasurementList = (self.bedList[x].collectMeasurements())  # collect all measurements
             for y in range(0, len(bedMeasurementList)):  # for every measurement
+                bedMeasurementList[y].gardenName = self.gardenName  # add gardenName to measurement
                 gardenMeasurementList.append(bedMeasurementList[y])  # add measurement to list
 
         return gardenMeasurementList
@@ -57,7 +60,7 @@ class Garden(object):
                 "VALUES (%s, %s, %s, %s, %s)"
         for measurement in measurements:
             values = (measurement.measurementTime, measurement.measurementType, measurement.measurementValue,
-                      "mybedname", "mygardenname")
+                      measurement.bedName, measurement.gardenName)
             cursor.execute(query, values)
             conn.commit()
         conn.close()
@@ -76,8 +79,9 @@ class Bed(object):
         bedMeasurementList = []  # is list of type SensorMeasurement
         for x in range(0, len(self.sensorList)):  # for every sensor
             for y in range(0, len(self.sensorList[x].measurementTypeList)):  # for every measurementType
-                bedMeasurementList.append(self.sensorList[x].measure(self.sensorList[x].measurementTypeList[y]))
-                # measure sensor and add measurement to list
+                newMeasurement = self.sensorList[x].measure(self.sensorList[x].measurementTypeList[y]) # measure sensor
+                newMeasurement.bedName = self.bedName  # add bedName to measurement
+                bedMeasurementList.append(newMeasurement)  # add measurement to list
 
         return bedMeasurementList
 
