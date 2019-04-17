@@ -109,8 +109,8 @@ class BME_280_Sensor(Sensor):
         if measurementType == "temperature":
             return SensorMeasurement("temperature", self.bme280.temperature, time.asctime())
 
-        elif measurementType == "humidity":
-            return SensorMeasurement("humidity", self.bme280.humidity, time.asctime())
+        elif measurementType == "airHumidity":
+            return SensorMeasurement("airHumidity", self.bme280.humidity, time.asctime())
 
         elif measurementType == "pressure":
             return SensorMeasurement("pressure", self.bme280.pressure, time.asctime())
