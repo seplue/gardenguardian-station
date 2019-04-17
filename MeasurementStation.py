@@ -1,11 +1,12 @@
+"""DOCSTRING
+
+"""
 import time
 import board
 import busio
 import adafruit_bme280
 import psycopg2
 # import RPi.GPIO as GPIO
-
-
 
 
 class SensorMeasurement(object):
@@ -53,7 +54,8 @@ class Garden(object):
                   str(measurements[i].measurementValue))
         print("---")
         # todo change values in .connect() to variables from function init
-        conn = psycopg2.connect('host=192.168.1.31 user=pi password=PzFhr2017 dbname=plantguardian_test')
+        conn = psycopg2.connect('host={} user={} password={} dbname={}'
+                                .format("192.168.1.31", "pi", "PzFhr2017", "plantguardian_test"))
         cursor = conn.cursor()
         query = "INSERT INTO measurements(measurementtime, measurementtype, measurementvalue, bedname, gardenname) " \
                 "VALUES (%s, %s, %s, %s, %s)"
@@ -78,7 +80,7 @@ class Bed(object):
         bedMeasurementList = []  # is list of type SensorMeasurement
         for x in range(0, len(self.sensorList)):  # for every sensor
             for y in range(0, len(self.sensorList[x].measurementTypeList)):  # for every measurementType
-                newMeasurement = self.sensorList[x].measure(self.sensorList[x].measurementTypeList[y]) # measure sensor
+                newMeasurement = self.sensorList[x].measure(self.sensorList[x].measurementTypeList[y])  # measure sensor
                 newMeasurement.bedName = self.bedName  # add bedName to measurement
                 bedMeasurementList.append(newMeasurement)  # add measurement to list
 
