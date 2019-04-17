@@ -3,7 +3,7 @@ from MeasurementStation import *
 # test
 """Test """
 
-myGarden = Garden("addr", "pi", "pw", "name", 60)
+myGarden = Garden("192.168.1.31", "pi", "PzFhr2017", "plantguardian_test", "firstGarden", 60)
 myBed = Bed("firstBed")
 myBed.addSensor(BME_280_Sensor(["temperature", "airHumidity", "pressure", "dewPoint"], ""))
 myGarden.addBed(myBed)

@@ -20,10 +20,11 @@ class SensorMeasurement(object):
 
 
 class Garden(object):
-    def __init__(self, databaseAddress, databaseUser, databasePassword, gardenName, measurementFrequency):
+    def __init__(self, databaseAddress, databaseUser, databasePassword, tableName, gardenName, measurementFrequency):
         self.databaseAddress = databaseAddress
         self.databaseUser = databaseUser
         self.databasePassword = databasePassword
+        self.tableName = tableName
         self.gardenName = gardenName
         self.measurementFrequency = measurementFrequency
         self.bedList = []
@@ -46,16 +47,15 @@ class Garden(object):
 
         return gardenMeasurementList
 
-    @staticmethod
-    def sendMeasurements(measurements):
+    def sendMeasurements(self, measurements):
         for i in range(0, len(measurements)):
             print(str(measurements[i].measurementTime) + ": " +
                   measurements[i].measurementType + ": " +
                   str(measurements[i].measurementValue))
         print("---")
-        # todo change values in .connect() to variables from function init
+
         conn = psycopg2.connect('host={} user={} password={} dbname={}'
-                                .format("192.168.1.31", "pi", "PzFhr2017", "plantguardian_test"))
+                                .format(self.databaseAddress, self.databaseUser, self.databasePassword, self.tableName))
         cursor = conn.cursor()
         query = "INSERT INTO measurements(measurementtime, measurementtype, measurementvalue, bedname, gardenname) " \
                 "VALUES (%s, %s, %s, %s, %s)"
