@@ -20,11 +20,11 @@ class SensorMeasurement(object):
 
 
 class Garden(object):
-    def __init__(self, databaseAddress, databaseUser, databasePassword, tableName, gardenName, measurementFrequency):
+    def __init__(self, databaseAddress, databaseUser, databasePassword, databaseName, gardenName, measurementFrequency):
         self.databaseAddress = databaseAddress
         self.databaseUser = databaseUser
         self.databasePassword = databasePassword
-        self.tableName = tableName
+        self.databaseName = databaseName
         self.gardenName = gardenName
         self.measurementFrequency = measurementFrequency
         self.bedList = []
@@ -55,7 +55,7 @@ class Garden(object):
         print("---")
 
         conn = psycopg2.connect('host={} user={} password={} dbname={}'
-                                .format(self.databaseAddress, self.databaseUser, self.databasePassword, self.tableName))
+                                .format(self.databaseAddress, self.databaseUser, self.databasePassword, self.databaseName))
         cursor = conn.cursor()
         query = "INSERT INTO measurements(measurementtime, measurementtype, measurementvalue, bedname, gardenname) " \
                 "VALUES (%s, %s, %s, %s, %s)"
