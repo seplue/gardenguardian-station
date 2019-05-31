@@ -1,4 +1,4 @@
-from MeasurementStation import *
+from src.MeasurementStation import *
 
 # test
 """Test """
