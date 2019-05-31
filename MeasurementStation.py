@@ -52,10 +52,11 @@ class Garden(object):
             print(str(measurements[i].measurementTime) + ": " +
                   measurements[i].measurementType + ": " +
                   str(measurements[i].measurementValue))
-        print("---")
 
         conn = psycopg2.connect('host={} user={} password={} dbname={}'
                                 .format(self.databaseAddress, self.databaseUser, self.databasePassword, self.databaseName))
+        print("Connection status: " + str(conn.status))
+        print("---")
         cursor = conn.cursor()
         query = "INSERT INTO measurements(measurementtime, measurementtype, measurementvalue, bedname, gardenname) " \
                 "VALUES (%s, %s, %s, %s, %s)"
