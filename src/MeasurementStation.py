@@ -5,13 +5,11 @@ import time
 import board
 import busio
 import adafruit_bme280
-import psycopg2
 import mysql.connector
 # import RPi.GPIO as GPIO
 
 
 class SensorMeasurement(object):
-
     def __init__(self, measurementType, measurementValue, measurementTime):
         self.measurementType = measurementType
         self.measurementValue = measurementValue
@@ -49,43 +47,34 @@ class Garden(object):
         return gardenMeasurementList
 
     def sendMeasurements(self, measurements):
+        # print measurements to be sent
+        print("gardenName" + ": " + measurements[0].gardenName)
+        print("bedName" + ": " + measurements[0].bedName)
         for i in range(0, len(measurements)):
             print(str(measurements[i].measurementTime) + ": " +
                   measurements[i].measurementType + ": " +
                   str(measurements[i].measurementValue))
+
+        # create connection to database
         mydb = mysql.connector.connect(
-            host="192.168.1.31",
-            user="gardenguardian",
-            passwd="Passwort123",
-            database="gardenguardian_test"
+            host=self.databaseAddress,
+            user=self.databaseUser,
+            passwd=self.databasePassword,
+            database=self.databaseName
         )
 
         mycursor = mydb.cursor()
 
-        sql = "Insert INTO measurements (measurementTime, measurementType, measurementValue, bedName, gardenName) VALUES (%s, %s, %s, %s, %s)"
+        # create sql query and values to be inserted
+        sql = "Insert INTO measurements (measurementTime, measurementType, measurementValue, bedName, gardenName) " \
+              "VALUES (%s, %s, %s, %s, %s)"
         for measurement in measurements:
             val = (measurement.measurementTime, measurement.measurementType, measurement.measurementValue, measurement.bedName, measurement.gardenName)
             mycursor.execute(sql, val)
 
         mydb.commit()
 
-        print(mycursor.rowcount, "record inserted.")
-        """
-        conn = psycopg2.connect('host={} user={} password={} dbname={}'
-                                .format(self.databaseAddress, self.databaseUser, self.databasePassword, self.databaseName))
-        print("Connection status: " + str(conn.status))
-        print("---")
-        cursor = conn.cursor()
-        query = "INSERT INTO measurements(measurementtime, measurementtype, measurementvalue, bedname, gardenname) " \
-                "VALUES (%s, %s, %s, %s, %s)"
-        for measurement in measurements:
-            values = (measurement.measurementTime, measurement.measurementType, measurement.measurementValue,
-                      measurement.bedName, measurement.gardenName)
-            cursor.execute(query, values)
-            conn.commit()
-        conn.close()
-        cursor.close()
-        """
+        print("records inserted.")
 
 
 class Bed(object):
