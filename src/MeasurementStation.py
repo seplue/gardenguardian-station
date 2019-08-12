@@ -6,6 +6,7 @@ import board
 import busio
 import adafruit_bme280
 import psycopg2
+import mysql.connector
 # import RPi.GPIO as GPIO
 
 
@@ -52,7 +53,24 @@ class Garden(object):
             print(str(measurements[i].measurementTime) + ": " +
                   measurements[i].measurementType + ": " +
                   str(measurements[i].measurementValue))
+        mydb = mysql.connector.connect(
+            host="192.168.1.31",
+            user="gardenguardian",
+            passwd="Passwort123",
+            database="gardenguardian_test"
+        )
 
+        mycursor = mydb.cursor()
+
+        sql = "Insert INTO measurements (measurementTime, measurementType, measurementValue, bedName, gardenName) VALUES (%s, %s, %s, %s, %s)"
+        for measurement in measurements:
+            val = (measurement.measurementTime, measurement.measurementType, measurement.measurementValue, measurement.bedName, measurement.gardenName)
+            mycursor.execute(sql, val)
+
+        mydb.commit()
+
+        print(mycursor.rowcount, "record inserted.")
+        """
         conn = psycopg2.connect('host={} user={} password={} dbname={}'
                                 .format(self.databaseAddress, self.databaseUser, self.databasePassword, self.databaseName))
         print("Connection status: " + str(conn.status))
@@ -67,6 +85,7 @@ class Garden(object):
             conn.commit()
         conn.close()
         cursor.close()
+        """
 
 
 class Bed(object):
