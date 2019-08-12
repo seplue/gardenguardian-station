@@ -9,7 +9,7 @@ database name: gardenguardian_test
 database table: measurements
 
 rows:                   type:
-measurementTime         charset(100)
-measurementType         charset(100)
-measurementValue        charset(100)
+measurementTime         varchar(100)
+measurementType         varchar(100)
+measurementValue        varchar(100)
 
