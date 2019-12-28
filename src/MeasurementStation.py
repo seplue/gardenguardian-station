@@ -1,12 +1,16 @@
 """DOCSTRING
 
 """
+# raspi imports
 import time
 import board
 import busio
 import adafruit_bme280
 import mysql.connector
 # import RPi.GPIO as GPIO
+
+# sqlalchemy imports
+from src.models import Measurement
 
 
 class SensorMeasurement(object):
